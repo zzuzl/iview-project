@@ -207,8 +207,17 @@
       }
     },
     mounted: function () {
-      this.reloadProject();
-      this.loadStaff();
+      let _this = this;
+
+      api.checkLogin()
+        .then(function (res) {
+          if (res.data.success) {
+            _this.reloadProject();
+            _this.loadStaff();
+          } else {
+            _this.$router.replace('/login');
+          }
+        })
     }
   }
 </script>

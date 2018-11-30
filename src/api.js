@@ -2,44 +2,67 @@ import axios from 'axios';
 import qs from 'qs';
 
 const BASE = 'http://www.zlihj.cn/rest';
+let token = '';
 
-const a = axios.create({
-  baseURL: BASE,
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2NzIzOTkxNzFAcXEuY29tIiwiZXhwIjoxNTQzNDc3MzUwfQ.6zxnhurgkAZ6RECQ8FFAdKOZdsFqR6sWnMNOh6qe5E8'
-  }
+axios.defaults.baseURL = BASE;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+  config.headers.token = token;
+  return config;
+}, function (error) {
+  return Promise.reject(error);
 });
+
+function getCookie(c_name) {
+  var arr, reg = new RegExp("(^| )" + c_name + "=([^;]*)(;|$)");
+
+  if (arr = document.cookie.match(reg))
+    return unescape(arr[2]);
+  else
+    return null;
+}
+
+function setCookie(name, value) {
+  var Days = 1;
+  var exp = new Date();
+  exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+  document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+}
 
 const Api = {
   checkLogin: function () {
-    a.get('/checkLogin')
-      .then(function (res) {
-        console.log(res);
-      });
+    let _token = getCookie('token');
+    token = _token;
+
+    return axios.get('/checkLogin');
   },
-  login: function () {
-    a.post('/staff/login', qs.stringify({
-      user: '672399171@qq.com',
-      password: '123456.com'
-    })).then(function (res) {
-      console.log(res.data);
-    });
+  storeToken: function (_token) {
+    token = _token;
+
+    setCookie('token', _token);
+  },
+  login: function (email, passwd) {
+    return axios.post('/staff/login', qs.stringify({
+      user: email,
+      password: passwd
+    }));
   },
   listProject: function (pid) {
-    return a.get('/project/list?pid=' + pid);
+    return axios.get('/project/list?pid=' + pid);
   },
   listStaff: function (page) {
     if (!page) {
       page = 1;
     }
-    return a.get('/staff/list?page=' + page);
+    return axios.get('/staff/list?page=' + page);
   },
   moveStaff: function (moveItem) {
-    return a.post('/staff/move', qs.stringify(moveItem));
+    return axios.post('/staff/move', qs.stringify(moveItem));
   },
   saveProject: function (project) {
-    return a.post('/project/save', qs.stringify(project));
+    return axios.post('/project/save', qs.stringify(project));
   }
 };
 
