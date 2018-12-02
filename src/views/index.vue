@@ -1,7 +1,7 @@
 <style scoped lang="less">
 </style>
 <template>
-    <Row :gutter="16">
+    <Row >
         <Col span="8" offset="1" style="margin-top: 50px">
         <Button type="primary" @click="company.modal = true; company.item.id = null; company.item.pid = 0;">添加部门</Button>
         <Table :columns="company.columns"
@@ -42,15 +42,21 @@
         </Modal>
 
 
-        <Col span="20" offset="1" style="margin-top: 50px">
+        <Col span="22" offset="1" style="margin-top: 50px; margin-bottom: 100px">
         <Button type="primary" @click="staff.modal = true; staff.item.id = null; staff.item.pid = 0;">添加人员信息</Button>
         <Table :columns="staff.columns"
                :stripe="true"
                :border="true"
                :loading="staff.loading"
-               :height="600"
+               :height="1000"
                :data="staffs">
         </Table>
+        <Page :total="staff.total"
+              :current="staff.current"
+              :page-size="20"
+              @on-change="changePage"
+              show-total></Page>
+
         </Col>
         <Modal title="移动到"
                v-model="staffModal"
@@ -75,6 +81,9 @@
                 </FormItem>
                 <FormItem label="邮箱">
                     <Input v-model="staff.item.email" type="email"/>
+                </FormItem>
+                <FormItem label="手机号">
+                    <Input v-model="staff.item.phone"/>
                 </FormItem>
                 <FormItem label="性别">
                     <Select v-model="staff.item.gender">
@@ -209,6 +218,8 @@ export default {
                     name: '',
                     pid: "0"
                 },
+                total: 0,
+                current: 1,
                 columns: [
                     {
                         title: '姓名',
@@ -229,6 +240,11 @@ export default {
                     {
                         title: '邮箱',
                         key: 'email',
+                        width: 200,
+                    },
+                    {
+                        title: '手机号',
+                        key: 'phone',
                         width: 200,
                     },
                     {
@@ -375,6 +391,7 @@ export default {
             this.staff.item.name = this.staffs[index].name;
             this.staff.item.email = this.staffs[index].email;
             this.staff.item.gender = "" + this.staffs[index].gender;
+            this.staff.item.phone = this.staffs[index].phone;
             this.staff.item.type = this.staffs[index].type;
             this.staff.item.pid = this.staffs[index].source + "_" + this.staffs[index].pid;
             this.staff.item.qq = this.staffs[index].qq;
@@ -386,6 +403,9 @@ export default {
             this.staff.item.workAddress = this.staffs[index].workAddress;
 
             this.staff.modal = true;
+        },
+        changePage: function (page) {
+            this.loadStaff();
         },
         moveStaff(index) {
             this.moveItem = {
@@ -442,7 +462,8 @@ export default {
             this.staff.loading = true;
             let _this = this;
             this.staffs = [];
-            api.listStaff(1)
+            this.staff.total = 0;
+            api.listStaff(this.staff.current)
                 .then(function (res) {
                     if (!res.data.success) {
                         _this.$Notice.error({
@@ -454,6 +475,7 @@ export default {
                     res.data.data.forEach(function (e) {
                         _this.staffs.push(e);
                     });
+                    _this.staff.total = res.data.total;
 
                     _this.staff.loading = false;
                 });

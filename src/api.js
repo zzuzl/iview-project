@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const BASE = 'http://localhost/rest';
+const BASE = 'http://www.zlihj.cn/rest';
 let token = '';
 
 axios.defaults.baseURL = BASE;
@@ -71,7 +71,6 @@ const Api = {
         return axios.post('/company/save', company);
     },
     saveStaff: function (staff) {
-        console.log(staff);
         let _staff = {
             id: staff.id,
             pid: staff.pid.substring(2, staff.pid.length),
@@ -84,7 +83,10 @@ const Api = {
             gxtAccount: staff.gxtAccount,
             workAddress: staff.workAddress,
             source: parseInt(staff.pid.charAt(0)),
-            birthday: staff.birthday
+            birthday: staff.birthday,
+            school: staff.school,
+            major: staff.major,
+            phone: staff.phone,
         };
 
         return axios.post('/staff/save', _staff);
