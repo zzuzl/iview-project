@@ -1,16 +1,20 @@
 <template>
-    <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
-        <FormItem label="邮箱" prop="email">
-            <Input type="email" v-model="formCustom.email"></Input>
-        </FormItem>
+    <Row>
+        <Col span="8" offset="8">
+            <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
+                <FormItem label="邮箱" prop="email">
+                    <Input type="email" v-model="formCustom.email"></Input>
+                </FormItem>
 
-        <FormItem label="密码" prop="passwd">
-            <Input type="password" v-model="formCustom.passwd"></Input>
-        </FormItem>
-        <FormItem>
-            <Button type="primary" @click="handleSubmit('formCustom')">登录</Button>
-        </FormItem>
-    </Form>
+                <FormItem label="密码" prop="passwd">
+                    <Input type="password" v-model="formCustom.passwd"></Input>
+                </FormItem>
+                <FormItem>
+                    <Button type="primary" @click="handleSubmit('formCustom')">登录</Button>
+                </FormItem>
+            </Form>
+        </Col>
+    </Row>
 </template>
 
 <script>
