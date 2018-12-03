@@ -178,7 +178,7 @@
                                     </Table>
                                     <Page :total="staff.total"
                                           :current="staff.current"
-                                          :page-size="20"
+                                          :page-size="50"
                                           @on-change="changePage"
                                           show-total>
                                     </Page>
@@ -410,7 +410,7 @@
             {
               title: '姓名',
               key: 'name',
-              fixed: 'left',
+              // fixed: 'left',
               width: 100,
             },
             {
@@ -436,7 +436,7 @@
             {
               title: '广讯通',
               key: 'gxtAccount',
-              width: 200,
+              width: 150,
             },
             {
               title: '部门/项目',
@@ -446,17 +446,17 @@
             {
               title: '职位',
               key: 'type',
-              width: 80,
+              width: 150,
             },
             {
               title: 'QQ',
               key: 'qq',
-              width: 100,
+              width: 150,
             },
             {
               title: '微信',
               key: 'wx',
-              width: 100,
+              width: 150,
             },
             {
               title: '出生日期',
@@ -471,12 +471,12 @@
             {
               title: '专业',
               key: 'major',
-              width: 200,
+              width: 250,
             },
             {
               title: '工作位置',
               key: 'workAddress',
-              width: 200,
+              width: 300,
             },
             {
               width: 150,
@@ -507,7 +507,6 @@
                   }, '移动')
                 ]);
               },
-              fixed: 'right'
             }
           ],
         },
@@ -651,6 +650,7 @@
         this.staff.modal = true;
       },
       changePage: function (page) {
+        this.staff.current = page;
         this.loadStaff();
       },
       moveStaff(index) {
