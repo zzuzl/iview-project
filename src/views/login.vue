@@ -1,5 +1,5 @@
 <template>
-    <Card style="width:800px; margin: 0 auto; margin-top: 300px; padding: 100px; background: #e8eaec">
+    <Card style="width:800px; margin: 0 auto; margin-top: 100px; padding: 100px; background: #e8eaec">
         <div style="text-align:center">
             <Form ref="formCustom"
                   :model="formCustom"
