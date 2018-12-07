@@ -12,11 +12,30 @@
                 <FormItem label="密码" prop="passwd">
                     <Input type="password" v-model="formCustom.passwd" size="large"></Input>
                 </FormItem>
+                <div style="text-align: right">
+                    <a href="mailto:672399171@qq.com" style="font-size: smaller">联系我</a>
+                    <a href="javascript:void(0)" @click="modal = true" style="font-size: smaller">忘记密码?</a>
+                </div>
                 <FormItem>
                     <Button type="primary" long @click="handleSubmit('formCustom')">登 录</Button>
                 </FormItem>
             </Form>
         </div>
+        <Modal title="重置密码"
+               v-model="modal"
+               :footer-hide="true">
+            <Form :label-width="80">
+                <FormItem label="邮箱" >
+                    <Input type="email" v-model="emailItem.email"/>
+                </FormItem>
+                <FormItem label="验证码" >
+                    <Input type="text" v-model="emailItem.code"/>
+                </FormItem>
+                <FormItem>
+                    <Button type="primary" @click="sendEmail">发送验证邮件</Button>
+                </FormItem>
+            </Form>
+        </Modal>
     </Card>
 </template>
 
@@ -43,6 +62,11 @@
       };
 
       return {
+        modal: false,
+        emailItem: {
+          email: '',
+          code: ''
+        },
         formCustom: {
           email: '672399171@qq.com',
           passwd: '123456.com',
@@ -58,6 +82,15 @@
       }
     },
     methods: {
+      sendEmail: function () {
+        let _this = this;
+        if (!this.emailItem.email || !this.emailItem.code) {
+          _this.$Message.error('邮箱或验证码为空');
+          return;
+        }
+
+        console.log(this.emailItem);
+      },
       handleSubmit(name) {
         let _this = this;
 
@@ -78,6 +111,12 @@
             this.$Message.error('校验失败!');
           }
         })
+      }
+    },
+    mounted: function () {
+      if (!api.isPc()) {
+        alert('请使用PC浏览器！');
+        window.location.href = 'https://www.google.com/chrome/';
       }
     }
   }

@@ -315,8 +315,8 @@
       const validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
-        } else if (value.length < 10 || value.length > 30) {
-          callback(new Error('密码长度[10-30]'));
+        } else if (value.length < 6 || value.length > 30) {
+          callback(new Error('密码长度[6-30]'));
         } else {
           callback();
         }
@@ -762,6 +762,11 @@
     },
     mounted: function () {
       let _this = this;
+
+      if (!api.isPc()) {
+        alert('请使用PC浏览器！');
+        window.location.href = 'https://www.google.com/chrome/';
+      }
 
       api.checkLogin()
         .then(function (res) {
