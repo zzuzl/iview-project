@@ -53,6 +53,7 @@
             <Layout>
                 <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}">
                     <strong>欢迎你，{{ me.name }} !</strong>
+                    <Button type="primary" @click="iosModal = true">注册ios设备</Button>
                     <Button type="primary" @click="changeModal = true">修改密码</Button>
                     <Button type="danger" @click="logout">退出</Button>
 
@@ -71,6 +72,19 @@
                             </FormItem>
                             <FormItem>
                                 <Button type="primary" @click="changePassword">修改</Button>
+                            </FormItem>
+                        </Form>
+                    </Modal>
+
+                    <Modal title="注册ios设备"
+                           v-model="iosModal"
+                           :footer-hide="true">
+                        <Form :label-width="80">
+                            <FormItem label="UUID" >
+                                <Input type="text" v-model="iosUuid"/>
+                            </FormItem>
+                            <FormItem>
+                                <Button type="primary" @click="reportUuid">注册</Button>
                             </FormItem>
                         </Form>
                     </Modal>
@@ -512,6 +526,8 @@
         },
         staffModal: false,
         changeModal: false,
+        iosModal: false,
+        iosUuid: '',
         passwordItem: {
           oldPassword: '',
           newPassword: ''
@@ -532,6 +548,23 @@
       logout: function () {
         api.logout();
         this.$router.go('/login');
+      },
+      reportUuid: function () {
+        if (!this.iosUuid) {
+          return;
+        }
+        let _this = this;
+        api.reportUuid(this.iosUuid).then(function (res) {
+          if (!res.data.success) {
+            _this.$Notice.error({
+              title: res.data.msg,
+            });
+          } else {
+            _this.$Notice.success({
+              title: '注册成功',
+            });
+          }
+        })
       },
       changePassword: function (name) {
         if (!this.passwordItem.oldPassword

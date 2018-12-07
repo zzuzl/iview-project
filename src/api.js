@@ -43,6 +43,9 @@ const Api = {
 
     setCookie('token', _token);
   },
+  reportUuid: function (uuid) {
+    return axios.post('/reportUuid?uuid=' + uuid);
+  },
   login: function (email, passwd) {
     return axios.post('/staff/login', qs.stringify({
       user: email,
