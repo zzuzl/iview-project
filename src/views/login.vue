@@ -13,7 +13,9 @@
                     <Input type="password" v-model="formCustom.passwd" size="large"></Input>
                 </FormItem>
                 <div style="text-align: right">
-                    <a href="mailto:672399171@qq.com" style="font-size: smaller">联系我</a>
+                    <Poptip word-wrap width="200" content="Email:672399171@qq.com">
+                        <a href="javascript:void(0)">联系我</a>
+                    </Poptip>
                     <a href="javascript:void(0)" @click="modal = true" style="font-size: smaller">忘记密码?</a>
                 </div>
                 <FormItem>
@@ -29,7 +31,14 @@
                     <Input type="email" v-model="emailItem.email"/>
                 </FormItem>
                 <FormItem label="验证码" >
-                    <Input type="text" v-model="emailItem.code"/>
+                    <Row>
+                        <Col span="13">
+                            <Input type="text" v-model="emailItem.code"/>
+                        </Col>
+                        <Col span="8" offset="2">
+                            <img src="http://localhost/rest/resource/captcha-image" height="32" onclick="this.src = 'http://localhost/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
+                        </Col>
+                    </Row>
                 </FormItem>
                 <FormItem>
                     <Button type="primary" @click="sendEmail">发送验证邮件</Button>
@@ -89,7 +98,14 @@
           return;
         }
 
-        console.log(this.emailItem);
+          api.sendMail(_this.emailItem.email, _this.emailItem.code)
+              .then(function (res) {
+                  if (res.data.success) {
+                      _this.$Message.success('邮件已发送到：' + _this.emailItem.email + ',请注意查收！');
+                  } else {
+                      _this.$Message.error(res.data.msg);
+                  }
+              });
       },
       handleSubmit(name) {
         let _this = this;

@@ -55,6 +55,12 @@ const Api = {
   reportUuid: function (uuid) {
     return axios.post('/reportUuid?uuid=' + uuid);
   },
+  sendMail: function (email, code) {
+      return axios.post('/resource/spe', qs.stringify({
+          email: email,
+          code: code
+      }));
+  },
   login: function (email, passwd) {
     return axios.post('/staff/login', qs.stringify({
       user: email,
