@@ -77,8 +77,8 @@
           code: ''
         },
         formCustom: {
-          email: '672399171@qq.com',
-          passwd: '123456.com',
+          email: '',
+          passwd: '',
         },
         ruleCustom: {
           email: [
