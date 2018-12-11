@@ -59,7 +59,11 @@ const Api = {
       return axios.post('/resource/spe', qs.stringify({
           email: email,
           code: code
-      }));
+      }), {
+        headers: {
+          "KAPTCHA_SESSION_KEY": getCookie("KAPTCHA_SESSION_KEY")
+        }
+      });
   },
   login: function (email, passwd) {
     return axios.post('/staff/login', qs.stringify({

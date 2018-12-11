@@ -36,7 +36,7 @@
                             <Input type="text" v-model="emailItem.code"/>
                         </Col>
                         <Col span="8" offset="2">
-                            <img src="http://localhost/rest/resource/captcha-image" height="32" onclick="this.src = 'http://localhost/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
+                            <img src="http://www.zlihj.cn/rest/resource/captcha-image" height="32" onclick="this.src = 'http://www.zlihj.cn/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
                         </Col>
                     </Row>
                 </FormItem>
@@ -131,8 +131,7 @@
     },
     mounted: function () {
       if (!api.isPc()) {
-        alert('请使用PC浏览器！');
-        window.location.href = 'https://www.google.com/chrome/';
+        alert('建议您使用PC浏览器访问！');
       }
     }
   }

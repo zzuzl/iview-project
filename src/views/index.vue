@@ -34,7 +34,7 @@
     }
 </style>
 <template>
-    <div class="layout">
+    <div class="layout" v-show="show">
         <Layout :style="{minHeight: '100vh'}">
             <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu active-name="me"
@@ -330,6 +330,7 @@
       };
 
       return {
+        show: false,
         ruleCustom: {
           oldPassword: [
             {validator: validatePass, trigger: 'blur'}
@@ -764,13 +765,14 @@
       let _this = this;
 
       if (!api.isPc()) {
-        alert('请使用PC浏览器！');
-        window.location.href = 'https://www.google.com/chrome/';
+        alert('建议您使用PC浏览器访问！');
       }
 
+      this.$Loading.start();
       api.checkLogin()
         .then(function (res) {
           if (res.data.success) {
+            _this.show = true;
             _this.reloadCompany();
             _this.reloadProject();
             _this.loadStaff();
