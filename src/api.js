@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const BASE = 'http://www.zlihj.cn/rest';
+const BASE = 'https://www.zlihj.cn/rest';
 let token = '';
 
 axios.defaults.baseURL = BASE;
@@ -32,15 +32,6 @@ function setCookie(name, value) {
 }
 
 const Api = {
-  isPc: function () {
-    let userAgentInfo = navigator.userAgent;
-    let Agents = ["Android", "iPhone", "Windows Phone", "iPad", "iPod"];
-    let flag = true;
-    for (let v = 0; v < Agents.length; v++) {
-      if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
-    }
-    return flag;
-  },
   checkLogin: function () {
     let _token = getCookie('token');
     token = _token;

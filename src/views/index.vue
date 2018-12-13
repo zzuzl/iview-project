@@ -36,7 +36,7 @@
 <template>
     <div class="layout" v-show="show">
         <Layout :style="{minHeight: '100vh'}">
-            <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
+            <Sider breakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu active-name="me"
                       theme="dark"
                       width="auto"
@@ -764,13 +764,10 @@
     mounted: function () {
       let _this = this;
 
-      if (!api.isPc()) {
-        alert('建议您使用PC浏览器访问！');
-      }
-
       this.$Loading.start();
       api.checkLogin()
         .then(function (res) {
+          _this.$Loading.finish();
           if (res.data.success) {
             _this.show = true;
             _this.reloadCompany();

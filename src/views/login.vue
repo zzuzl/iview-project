@@ -36,7 +36,7 @@
                             <Input type="text" v-model="emailItem.code"/>
                         </Col>
                         <Col span="8" offset="2">
-                            <img src="http://www.zlihj.cn/rest/resource/captcha-image" height="32" onclick="this.src = 'http://www.zlihj.cn/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
+                            <img src="https://www.zlihj.cn/rest/resource/captcha-image" height="32" onclick="this.src = 'https://www.zlihj.cn/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
                         </Col>
                     </Row>
                 </FormItem>
@@ -45,6 +45,10 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <div style="width: 100%; height: 20px;position: absolute;bottom: 0;left: 0;text-align: center">
+            <a href="http://www.miitbeian.gov.cn/" target="_blank">豫ICP备16016746号-1</a>
+        </div>
     </Card>
 </template>
 
@@ -129,11 +133,6 @@
         })
       }
     },
-    mounted: function () {
-      if (!api.isPc()) {
-        alert('建议您使用PC浏览器访问！');
-      }
-    }
   }
 </script>
 
