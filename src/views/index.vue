@@ -132,7 +132,7 @@
                             </Form>
                             <Button type="primary" :disabled="!changed" @click="updateInfo">保存</Button>
                         </div>
-                        <div style="height: 800px" v-if="menu === 'manage' && me.type === '总工'">
+                        <div style="height: 800px" v-if="menu === 'manage'">
                             <Tabs value="companyManage">
                                 <TabPane label="部门管理" name="companyManage">
                                     <Button type="primary"
@@ -183,6 +183,15 @@
                                             @click="staff.modal = true; staff.item.id = null; staff.item.pid = 0;">
                                         添加人员信息
                                     </Button>
+                                    <a href="https://www.zlihj.cn/rest/resource/downloadTpl" target="_blank">下载导入模板文件</a>
+                                    <Upload action="https://www.zlihj.cn/rest/resource/uploadFile"
+                                            :max-size="2048"
+                                            :show-upload-list="false"
+                                            :on-success="uploadSucc"
+                                            :on-error="uploadError"
+                                            :name="file">
+                                        <Button icon="ios-cloud-upload-outline">导入人员</Button>
+                                    </Upload>
                                     <Table :columns="staff.columns"
                                            :stripe="true"
                                            :border="true"
@@ -543,6 +552,14 @@
       }
     },
     methods: {
+      uploadSucc: function (response, file) {
+        this.$Message.success(response);
+        this.loadStaff();
+      },
+      uploadError: function (error, file) {
+        this.$Message.error(error);
+        this.loadStaff();
+      },
       selectMenu: function (menuName) {
         this.menu = menuName;
       },
