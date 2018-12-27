@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const BASE = 'https://www.zlihj.cn/rest';
+const BASE = 'https://www.zzuzl.cn/rest';
 let token = '';
 
 axios.defaults.baseURL = BASE;
@@ -37,6 +37,9 @@ const Api = {
     token = _token;
 
     return axios.get('/checkLogin');
+  },
+  getPermissions: function () {
+    return axios.get('/staff/permissions');
   },
   storeToken: function (_token) {
     token = _token;
@@ -77,14 +80,25 @@ const Api = {
   listCompany: function (pid) {
     return axios.get('/company/list?pid=' + pid);
   },
-  listStaff: function (page) {
+  listStaff: function (page, key) {
     if (!page) {
       page = 1;
     }
-    return axios.get('/staff/list?page=' + page);
+
+    let otherParam = (key && key.trim()) ? "&key=" + key.trim() : "";
+
+    return axios.get('/staff/list?page=' + page + otherParam);
   },
   moveStaff: function (moveItem) {
-    return axios.post('/staff/move', moveItem);
+    let index = moveItem.pid.indexOf('_');
+
+    return axios.post('/staff/move', qs.stringify({
+      id: moveItem.id,
+      source: parseInt(moveItem.pid.substring(0, index)),
+      pid: parseInt(moveItem.pid.substring(index + 1)),
+      oldSource: moveItem.oldSource,
+      oldPid: moveItem.oldPid
+    }));
   },
   saveProject: function (project) {
     return axios.post('/project/save', project);

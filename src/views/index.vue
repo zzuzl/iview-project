@@ -45,7 +45,7 @@
                     <MenuItem name="me">
                         <span>我的信息</span>
                     </MenuItem>
-                    <MenuItem name="manage">
+                    <MenuItem v-if="permission" name="manage">
                         <span>管理</span>
                     </MenuItem>
                 </Menu>
@@ -132,8 +132,8 @@
                             </Form>
                             <Button type="primary" :disabled="!changed" @click="updateInfo">保存</Button>
                         </div>
-                        <div style="height: 800px" v-if="menu === 'manage'">
-                            <Tabs value="companyManage">
+                        <div style="height: 800px" v-if="menu === 'manage' && permission">
+                            <Tabs value="companyManage" :animated="false">
                                 <TabPane label="部门管理" name="companyManage">
                                     <Button type="primary"
                                             @click="company.modal = true; company.item.id = null; company.item.pid = 0;">
@@ -179,25 +179,55 @@
                                     </Modal>
                                 </TabPane>
                                 <TabPane label="人员管理" name="staffManage">
-                                    <Button type="primary"
-                                            @click="staff.modal = true; staff.item.id = null; staff.item.pid = 0;">
-                                        添加人员信息
-                                    </Button>
-                                    <a href="https://www.zlihj.cn/rest/resource/downloadTpl" target="_blank">下载导入模板文件</a>
-                                    <Upload action="https://www.zlihj.cn/rest/resource/uploadFile"
-                                            :max-size="2048"
-                                            :show-upload-list="false"
-                                            :on-success="uploadSucc"
-                                            :on-error="uploadError"
-                                            :name="file">
-                                        <Button icon="ios-cloud-upload-outline">导入人员</Button>
-                                    </Upload>
+                                    <Row>
+                                        <Col span="4">
+                                        <Button type="primary"
+                                                @click="staff.modal = true; staff.item.id = null; staff.item.pid = 0;">
+                                            添加人员信息
+                                        </Button>
+                                        </Col>
+                                        <Col span="4">
+                                        <a href="https://www.zzuzl.cn/rest/resource/downloadTpl" target="_blank">下载导入模板文件</a>
+                                        </Col>
+                                        <Col span="4">
+                                        <Upload action="https://www.zzuzl.cn/rest/resource/uploadFile"
+                                                :max-size="2048"
+                                                :show-upload-list="false"
+                                                :on-success="uploadSucc"
+                                                :on-error="uploadError"
+                                                :name="file">
+                                            <Button icon="ios-cloud-upload-outline">导入人员</Button>
+                                        </Upload>
+                                        </Col>
+                                    </Row>
+                                    <Row style="margin-top: 10px">
+                                        <Col span="6">
+                                        <!--<Select v-model="searchPid">
+                                            <Option :value="all" >全部</Option>
+                                            <OptionGroup label="部门">
+                                                <Option v-for="item in companys" :value="'0_' + item.id"
+                                                        :key="'0_' + item.id">{{ item.name }}
+                                                </Option>
+                                            </OptionGroup>
+                                            <OptionGroup label="项目">
+                                                <Option v-for="item in projects" :value="'1_' + item.id"
+                                                        :key="'1_' + item.id">{{ item.name }}
+                                                </Option>
+                                            </OptionGroup>
+                                        </Select>-->
+                                        </Col>
+                                        <Col span="16" offset="1">
+                                        <Input search enter-button placeholder="输入关键字搜索" @on-search="search" v-model="searchKey" />
+                                        </Col>
+                                    </Row>
+
                                     <Table :columns="staff.columns"
                                            :stripe="true"
                                            :border="true"
                                            :loading="staff.loading"
                                            :height="650"
-                                           :data="staffs">
+                                           :data="staffs"
+                                            style="margin: 10px">
                                     </Table>
                                     <Page :total="staff.total"
                                           :current="staff.current"
@@ -548,7 +578,10 @@
         },
         companys: [],
         projects: [],
-        staffs: []
+        staffs: [],
+        permission: false,
+        searchKey: '',
+        searchPid: 'all'
       }
     },
     methods: {
@@ -707,7 +740,8 @@
       moveStaff(index) {
         this.moveItem = {
           id: this.staffs[index].id,
-          source: 1,
+          oldSource: this.staffs[index].source,
+          oldPid: this.staffs[index].pid,
           pid: this.staffs[index].source + '_' + this.staffs[index].pid
         };
         this.staffModal = true;
@@ -755,12 +789,19 @@
             _this.company.loading = false;
           });
       },
+      search() {
+        this.loadStaff()
+      },
       loadStaff() {
+        if (this.staff.loading) {
+          return;
+        }
+
         this.staff.loading = true;
         let _this = this;
         this.staffs = [];
         this.staff.total = 0;
-        api.listStaff(this.staff.current)
+        api.listStaff(this.staff.current, this.searchKey)
           .then(function (res) {
             if (!res.data.success) {
               _this.$Notice.error({
@@ -776,6 +817,31 @@
 
             _this.staff.loading = false;
           });
+      },
+      initData() {
+        let _this = this;
+
+        api.getPermissions()
+          .then(function (res) {
+            if (res.data.success) {
+              if (res.data.data.indexOf("COMPANY_SAVE") > -1) {
+                _this.reloadCompany();
+                _this.permission = true;
+              }
+              if (res.data.data.indexOf("PROJECT_SAVE") > -1) {
+                _this.reloadProject();
+                _this.permission = true;
+              }
+              if (res.data.data.indexOf("STAFF_LIST") > -1) {
+                _this.loadStaff();
+                _this.permission = true;
+              }
+            } else {
+              _this.$Notice.error({
+                title: res.data.msg,
+              });
+            }
+          })
       }
     },
     mounted: function () {
@@ -787,11 +853,8 @@
           _this.$Loading.finish();
           if (res.data.success) {
             _this.show = true;
-            _this.reloadCompany();
-            _this.reloadProject();
-            _this.loadStaff();
-
             _this.me = res.data.data;
+            _this.initData();
           } else {
             _this.$router.replace('/login');
           }
