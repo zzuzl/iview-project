@@ -132,7 +132,7 @@
                             </Form>
                             <Button type="primary" :disabled="!changed" @click="updateInfo">保存</Button>
                         </div>
-                        <div style="height: 800px" v-if="menu === 'manage' && permission">
+                        <div style="height: 850px" v-if="menu === 'manage' && permission">
                             <Tabs value="companyManage" :animated="false">
                                 <TabPane label="部门管理" name="companyManage">
                                     <Button type="primary"
@@ -201,22 +201,7 @@
                                         </Col>
                                     </Row>
                                     <Row style="margin-top: 10px">
-                                        <Col span="6">
-                                        <!--<Select v-model="searchPid">
-                                            <Option :value="all" >全部</Option>
-                                            <OptionGroup label="部门">
-                                                <Option v-for="item in companys" :value="'0_' + item.id"
-                                                        :key="'0_' + item.id">{{ item.name }}
-                                                </Option>
-                                            </OptionGroup>
-                                            <OptionGroup label="项目">
-                                                <Option v-for="item in projects" :value="'1_' + item.id"
-                                                        :key="'1_' + item.id">{{ item.name }}
-                                                </Option>
-                                            </OptionGroup>
-                                        </Select>-->
-                                        </Col>
-                                        <Col span="16" offset="1">
+                                        <Col span="16" >
                                         <Input search enter-button placeholder="输入关键字搜索" @on-search="search" v-model="searchKey" />
                                         </Col>
                                     </Row>
@@ -289,14 +274,7 @@
                                             </FormItem>
                                             <FormItem label="职位">
                                                 <Select v-model="staff.item.type">
-                                                    <Option value="总工">总工</Option>
-                                                    <Option value="技术质量部经理">技术质量部经理</Option>
-                                                    <Option value="质量总监">质量总监</Option>
-                                                    <Option value="技术员">技术员</Option>
-                                                    <Option value="测量员">测量员</Option>
-                                                    <Option value="资料员">资料员</Option>
-                                                    <Option value="试验员">试验员</Option>
-                                                    <Option value="安装员">安装员</Option>
+                                                    <Option v-for="item in workTypes" :value="item.name">{{ item.name }}</Option>
                                                 </Select>
                                             </FormItem>
                                             <FormItem label="广讯通">
@@ -318,8 +296,8 @@
                                                 <Input v-model="staff.item.major"/>
                                             </FormItem>
                                             <FormItem label="出生日期">
-                                                <DatePicker type="date" placeholder="出生日期" format="yyyy-MM-dd"
-                                                            v-model="staff.item.birthday"></DatePicker>
+                                                <DatePicker type="date" @on-change="dateChanged" placeholder="出生日期" format="yyyy-MM-dd"
+                                                            :value="staff.item.birthday"></DatePicker>
                                             </FormItem>
                                         </Form>
                                     </Modal>
@@ -581,7 +559,8 @@
         staffs: [],
         permission: false,
         searchKey: '',
-        searchPid: 'all'
+        searchPid: 'all',
+        workTypes: []
       }
     },
     methods: {
@@ -733,6 +712,9 @@
 
         this.staff.modal = true;
       },
+      dateChanged: function (date) {
+        this.staff.item.birthday = date;
+      },
       changePage: function (page) {
         this.staff.current = page;
         this.loadStaff();
@@ -846,6 +828,13 @@
     },
     mounted: function () {
       let _this = this;
+
+      api.workTypes()
+        .then(function (res) {
+          if (res.data.success) {
+            _this.workTypes = res.data.data;
+          }
+        });
 
       this.$Loading.start();
       api.checkLogin()

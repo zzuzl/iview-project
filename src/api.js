@@ -38,6 +38,9 @@ const Api = {
 
     return axios.get('/checkLogin');
   },
+  workTypes: function () {
+    return axios.get('/resource/workTypes');
+  },
   getPermissions: function () {
     return axios.get('/staff/permissions');
   },
