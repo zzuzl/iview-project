@@ -106,6 +106,12 @@ const Api = {
   saveProject: function (project) {
     return axios.post('/project/save', project);
   },
+  delProject: function (id) {
+    return axios.post('/project/del', qs.stringify({id: id}));
+  },
+  delStaff: function (id) {
+    return axios.post('/staff/del', qs.stringify({id: id}));
+  },
   saveCompany: function (company) {
     return axios.post('/company/save', company);
   },

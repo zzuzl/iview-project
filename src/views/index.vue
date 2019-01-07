@@ -376,7 +376,7 @@
               key: 'name'
             },
             {
-              width: 100,
+              width: 120,
               align: 'center',
               render: (h, params) => {
                 return h('div', [
@@ -390,7 +390,18 @@
                         this.editProject(params.index)
                       }
                     }
-                  }, '修改')
+                  }, '修改'),
+                  h('Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    on: {
+                      click: () => {
+                        this.delProject(params.index)
+                      }
+                    }
+                  }, '删除')
                 ]);
               }
             }
@@ -511,7 +522,7 @@
               width: 300,
             },
             {
-              width: 150,
+              width: 200,
               align: 'center',
               render: (h, params) => {
                 return h('div', [
@@ -536,7 +547,18 @@
                         this.moveStaff(params.index)
                       }
                     }
-                  }, '移动')
+                  }, '移动'),
+                  h('Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    on: {
+                      click: () => {
+                        this.delStaff(params.index)
+                      }
+                    }
+                  }, '删除')
                 ]);
               },
             }
@@ -565,7 +587,12 @@
     },
     methods: {
       uploadSucc: function (response, file) {
-        this.$Message.success(response);
+        if (response.response !== undefined && response.response !== null) {
+          this.$Message.success(response.response);
+        } else {
+          this.$Message.error(response.error);
+        }
+
         this.loadStaff();
       },
       uploadError: function (error, file) {
@@ -694,6 +721,19 @@
 
         this.project.modal = true;
       },
+      delProject(index) {
+        let _this = this;
+        api.delProject(this.projects[index].id)
+          .then(function (res) {
+            if (!res.data.success) {
+              _this.$Notice.error({
+                title: res.data.msg,
+              });
+            } else {
+              _this.reloadProject();
+            }
+          })
+      },
       editStaff(index) {
         this.staff.item.id = this.staffs[index].id;
         this.staff.item.name = this.staffs[index].name;
@@ -740,6 +780,23 @@
             }
             _this.loadStaff();
           });
+      },
+      delStaff(index) {
+        if (!confirm("确定要删除【" + this.staffs[index].name + "】？删除后无法找回！")) {
+          return;
+        }
+
+        let _this = this;
+        api.delStaff(this.staffs[index].id)
+          .then(function (res) {
+            if (!res.data.success) {
+              _this.$Notice.error({
+                title: res.data.msg,
+              });
+            } else {
+              _this.loadStaff();
+            }
+          })
       },
       reloadProject() {
         this.project.loading = true;
