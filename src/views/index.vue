@@ -220,6 +220,25 @@
                                           @on-change="changePage"
                                           show-total>
                                     </Page>
+                                    <Modal title="简历"
+                                           v-model="resumeItem._modal"
+                                           @on-ok="saveResumes(resumeItem.staffId)">
+                                        <Button type="primary"
+                                                @click="resumes.push({})">
+                                            添加
+                                        </Button>
+                                        <Row v-for="(item,index) in resumes">
+                                            <Col span="20">
+                                            <Input v-model="item.content" @on-change="item.changed = true"/>
+                                            </Col>
+                                            <Col span="4">
+                                            <Button type="danger"
+                                                    @click="delResume(index)">
+                                                删除
+                                            </Button>
+                                            </Col>
+                                        </Row>
+                                    </Modal>
                                     <Modal title="移动到"
                                            v-model="staffModal"
                                            @on-ok="moveStaffCore">
@@ -539,6 +558,17 @@
                   }, '修改'),
                   h('Button', {
                     props: {
+                      type: 'info',
+                      size: 'small'
+                    },
+                    on: {
+                      click: () => {
+                        this.resumeManage(params.index)
+                      }
+                    }
+                  }, '简历'),
+                  h('Button', {
+                    props: {
                       type: 'error',
                       size: 'small'
                     },
@@ -575,6 +605,11 @@
         moveItem: {
           name: '',
           pid: "0"
+        },
+        resumes:[],
+        resumeItem: {
+          content: '',
+          _modal: false
         },
         companys: [],
         projects: [],
@@ -732,6 +767,73 @@
             } else {
               _this.reloadProject();
             }
+          })
+      },
+      saveResumes(staffId) {
+        let _this = this;
+        if(this.resumes && this.resumes.length) {
+          for (var i=0;i<this.resumes.length;i++) {
+            var resume = this.resumes[i];
+            if (!resume || !resume.content) {
+              this.$Notice.error({
+                title: '输入为空'
+              });
+              return;
+            }
+          }
+          // this.$Spin.show();
+          this.resumes.forEach(function (resume) {
+            if (!resume.changed) {
+              return;
+            }
+
+            resume.staffId = staffId;
+            api.saveResume(resume)
+              .then(function (res) {
+                if (!res.data.success) {
+                  _this.$Notice.error({
+                    title: res.data.msg,
+                  });
+                  // this.$Spin.hide();
+                }
+              })
+          })
+        }
+      },
+      delResume(index) {
+        let resume = this.resumes[index];
+        let _this = this;
+        if (resume.id) {
+          this.$Spin.show();
+
+          api.delResume(resume.id)
+            .then(function (res) {
+              _this.$Spin.hide();
+              if (!res.data.success) {
+                _this.$Notice.error({
+                  title: res.data.msg,
+                });
+              } else {
+                _this.resumes.splice(index, 1);
+              }
+            })
+        } else {
+          this.resumes.splice(index, 1);
+        }
+      },
+      resumeManage(index) {
+        let _this = this;
+        api.listResume(this.staffs[index].id)
+          .then(function (res) {
+            if (!res.data.success) {
+              _this.$Notice.error({
+                title: res.data.msg,
+              });
+              return;
+            }
+            _this.resumes = res.data.data;
+            _this.resumeItem._modal = true;
+            _this.resumeItem.staffId = _this.staffs[index].id;
           })
       },
       editStaff(index) {

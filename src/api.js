@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const BASE = 'https://www.zzuzl.cn/rest';
+const BASE = 'http://localhost:8888/rest';
 let token = '';
 
 axios.defaults.baseURL = BASE;
@@ -77,11 +77,20 @@ const Api = {
   updateInfo: function (info) {
     return axios.post('/staff/updateInfo', info);
   },
+  saveResume: function (resume) {
+    return axios.post('/resume/save', resume);
+  },
+  delResume: function (id) {
+    return axios.post('/resume/del', qs.stringify({id: id}));
+  },
   listProject: function (pid) {
     return axios.get('/project/list?pid=' + pid);
   },
   listCompany: function (pid) {
     return axios.get('/company/list?pid=' + pid);
+  },
+  listResume: function (staffId) {
+    return axios.get('/resume/findByStaff?staffId=' + staffId);
   },
   listStaff: function (page, key) {
     if (!page) {
