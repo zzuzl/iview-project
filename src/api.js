@@ -77,8 +77,8 @@ const Api = {
   updateInfo: function (info) {
     return axios.post('/staff/updateInfo', info);
   },
-  saveResume: function (resume) {
-    return axios.post('/resume/save', resume);
+  saveResume: function (body) {
+    return axios.post('/resume/save', body);
   },
   delResume: function (id) {
     return axios.post('/resume/del', qs.stringify({id: id}));
