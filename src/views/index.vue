@@ -141,7 +141,10 @@
                                     <project v-on:reportProjects="reportProjects"></project>
                                 </TabPane>
                                 <TabPane label="人员管理" name="staffManage">
-                                    <staff></staff>
+                                    <staff :companys="companys" :projects="projects"></staff>
+                                </TabPane>
+                                <TabPane label="专利管理" name="patentManage">
+                                    <patent></patent>
                                 </TabPane>
                             </Tabs>
                         </div>
@@ -156,9 +159,10 @@
   import Project from './project.vue'
   import Company from './company.vue'
   import Staff from './staff.vue'
+  import Patent from './patent'
 
   export default {
-    components: { Project, Company, Staff },
+    components: { Project, Company, Staff, Patent },
     computed: {
       menuitemClasses: function () {
         return [

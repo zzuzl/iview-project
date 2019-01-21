@@ -149,6 +149,7 @@
 
   export default {
     name: "staff",
+    props: ["companys", "projects"],
     components: {},
     data() {
       return {
@@ -287,7 +288,6 @@
                   }
               ],
           },
-          companys: [],
           staffs: [],
           staffModal: false,
           searchKey: '',

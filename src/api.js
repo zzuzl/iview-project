@@ -86,6 +86,15 @@ const Api = {
   listProject: function (pid) {
     return axios.get('/project/list?pid=' + pid);
   },
+  listPatent: function (page) {
+    return axios.get('/patent/pageList?page=' + page);
+  },
+  getAuthors: function (patentId) {
+    return axios.get('/patent/authors?patentId=' + patentId);
+  },
+  savePatent: function (patent) {
+    return axios.post('/patent/save', patent);
+  },
   listCompany: function (pid) {
     return axios.get('/company/list?pid=' + pid);
   },
