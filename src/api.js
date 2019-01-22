@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const BASE = 'http://localhost:8888/rest';
+const BASE = 'https://www.zlihj.cn/rest';
 let token = '';
 
 axios.defaults.baseURL = BASE;

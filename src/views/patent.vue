@@ -36,7 +36,7 @@
                 </FormItem>
                 <FormItem label="URL">
                     <Input v-model="patent.item.url" disabled/>
-                    <Upload action="http://localhost:8888/rest/resource/uploadPatent"
+                    <Upload action="https://www.zlihj.cn/rest/resource/uploadPatent"
                             :max-size="5120"
                             :show-upload-list="false"
                             :on-success="uploadSucc"
