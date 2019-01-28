@@ -146,6 +146,9 @@
                                 <TabPane label="专利管理" name="patentManage">
                                     <patent></patent>
                                 </TabPane>
+                                <TabPane label="存储管理" name="storageManage">
+                                    <storage></storage>
+                                </TabPane>
                             </Tabs>
                         </div>
                     </Card>
@@ -160,9 +163,10 @@
   import Company from './company.vue'
   import Staff from './staff.vue'
   import Patent from './patent'
+  import Storage from './storage'
 
   export default {
-    components: { Project, Company, Staff, Patent },
+    components: { Project, Company, Staff, Patent, Storage },
     computed: {
       menuitemClasses: function () {
         return [

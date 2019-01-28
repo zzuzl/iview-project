@@ -95,6 +95,12 @@ const Api = {
   savePatent: function (patent) {
     return axios.post('/patent/save', patent);
   },
+  listStorage: function (type) {
+    return axios.get('/storage/list?type=' + type);
+  },
+  saveStorage: function (storage) {
+    return axios.post('/storage/save', storage);
+  },
   listCompany: function (pid) {
     return axios.get('/company/list?pid=' + pid);
   },
