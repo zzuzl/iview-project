@@ -13,6 +13,13 @@ const routers = [
     },
     component: (resolve) => require(['./views/index.vue'], resolve)
   },
+    {
+        path: '/subject',
+        meta: {
+            title: '管理'
+        },
+        component: (resolve) => require(['./views/subject.vue'], resolve)
+    },
 
 ];
 export default routers;

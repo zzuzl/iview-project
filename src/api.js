@@ -101,6 +101,9 @@ const Api = {
   saveStorage: function (storage) {
     return axios.post('/storage/save', storage);
   },
+    delStorage: function (id) {
+        return axios.post('/storage/del?id=' + id);
+    },
   listCompany: function (pid) {
     return axios.get('/company/list?pid=' + pid);
   },
@@ -159,7 +162,10 @@ const Api = {
     };
 
     return axios.post('/staff/save', _staff);
-  }
+  },
+    getExam: function () {
+        return axios.get('/storage/getExam');
+    },
 };
 
 export default Api;
