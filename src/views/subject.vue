@@ -1,15 +1,21 @@
 <template>
     <div>
-        <Card style="width:80%;margin: 0 auto;">
+        <Card style="width:90%;margin: 0 auto;">
             <p slot="title">
                 <Icon type="ios-film-outline"></Icon>
                 制度/资料管理
             </p>
-            <a href="#" slot="extra" @click.prevent="storage.modal = true; storage.item.id = null;">
-                添加
-            </a>
+            <span slot="extra">
+                <a href="#" v-if="draged" style="color: red" @click.prevent="saveDrag">保存调整</a>
+                <a href="#" @click.prevent="storage.modal = true; storage.item.id = null;">
+                    添加
+                </a>
+            </span>
+
             <Table :columns="storage.columns"
                    :stripe="true"
+                   :draggable="true"
+                   @on-drag-drop="dragDrop"
                    :border="true"
                    :loading="storage.loading"
                    :height="600"
@@ -42,7 +48,7 @@
                 </Form>
             </Modal>
         </Card>
-        <Card style="width:80%;margin: 0 auto;">
+        <Card style="width:90%;margin: 0 auto;">
             <p slot="title">
                 <Icon type="ios-film-outline"></Icon>
                 题目管理
@@ -65,12 +71,21 @@
 <script>
   import api from '../api.js'
 
+  function sortBy(a, b) {
+      if (a.storageType !== b.storageType) {
+          return a.storageType - b.storageType
+      }
+
+      return a.itemOrder - b.itemOrder
+  }
+
   export default {
     name: "subject",
     components: {},
     data() {
         return {
             url: '#',
+            draged: false,
             storage: {
                 modal: false,
                 loading: false,
@@ -90,6 +105,7 @@
                     },
                     {
                         title: '存储类型',
+                        width: 150,
                         render: (h, params) => {
                             var value = params.row.storageType;
                             if (value === 1) {
@@ -105,7 +121,7 @@
                         }
                     },
                     {
-                        width: 100,
+                        width: 120,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -171,6 +187,45 @@
                       _this.reloadStorage();
                   });
           },
+          dragDrop (index1, index2) {
+              if (index1 === index2) {
+                  return
+              }
+              let temp = this.storages[index1];
+              this.storages.splice(index1, 1);
+              this.storages.splice(index2, 0, temp);
+              this.draged = true
+          },
+          saveDrag () {
+              if (!this.draged) {
+                  return
+              }
+              let body = [];
+              for (let i=0;i<this.storages.length;i++) {
+                  if (this.storages[i].itemOrder !== i) {
+                      body.push({id:this.storages[i].id, index:i, oldIndex: this.storages[i].itemOrder})
+                  }
+              }
+              console.log(body);
+              if (body.length) {
+                  let _this = this;
+                  this.storage.loading = true;
+                  api.saveOrder(body)
+                      .then(function (res) {
+                          if (!res.data.success) {
+                              _this.$Notice.error({
+                                  title: res.data.msg,
+                              });
+                              this.storage.loading = false;
+                              return;
+                          }
+                          _this.reloadStorage();
+                          this.storage.loading = false;
+                      })
+              }
+
+              this.draged = false
+          },
           reloadStorage() {
               this.storage.loading = true;
               let _this = this;
@@ -185,6 +240,7 @@
                           return;
                       }
                       _this.storages = _this.storages.concat(res.data.data);
+                      _this.storages.sort(sortBy);
                       _this.storage.loading = false;
                   });
 

@@ -130,6 +130,9 @@ const Api = {
       oldPid: moveItem.oldPid
     }));
   },
+  saveOrder: function(body) {
+    return axios.post('/storage/saveOrder', body)
+  },
   saveProject: function (project) {
     return axios.post('/project/save', project);
   },

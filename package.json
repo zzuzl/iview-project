@@ -1,6 +1,6 @@
 {
   "name": "iview-project",
-  "version": "3.0.0",
+  "version": "3.4.2",
   "description": "A base project with Vue.js2、Vue-Router、webpack2 and with iView3.",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
-    "iview": "^3.0.0",
+    "iview": "^3.4.2",
     "vue": "^2.5.16",
     "vue-router": "^2.8.1"
   },
