@@ -19,3 +19,14 @@ npm run dev
 npm run build
 ```
 
+### Deploy(firebase)
+```bush
+rm -rf dist
+rm -rf firebase/dist
+npm run build
+cp index_prod.html firebase/public/index.html
+cp -r dist firebase/public
+cd firebase
+firebase deploy
+```
+

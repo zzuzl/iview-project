@@ -8,10 +8,10 @@
             </Button>
             </Col>
             <Col span="4">
-            <a href="https://www.zzuzl.cn/rest/resource/downloadTpl" target="_blank">下载导入模板文件</a>
+            <a href="https://www.zlihj.cn/rest/resource/downloadTpl" target="_blank">下载导入模板文件</a>
             </Col>
             <Col span="4">
-            <Upload action="https://www.zzuzl.cn/rest/resource/uploadFile"
+            <Upload action="https://www.zlihj.cn/rest/resource/uploadFile"
                     :max-size="2048"
                     :show-upload-list="false"
                     :on-success="uploadSucc"

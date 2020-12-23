@@ -36,7 +36,7 @@
                             <Input type="text" v-model="emailItem.code"/>
                         </Col>
                         <Col span="8" offset="2">
-                            <img src="https://www.zzuzl.cn/rest/resource/captcha-image" height="32" onclick="this.src = 'https://www.zzuzl.cn/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
+                            <img src="https://www.zlihj.cn/rest/resource/captcha-image" height="32" onclick="this.src = 'https://www.zlihj.cn/rest/resource/captcha-image?' + new Date().getMilliseconds()"/>
                         </Col>
                     </Row>
                 </FormItem>

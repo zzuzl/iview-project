@@ -20,8 +20,8 @@
                 </FormItem>
                 <FormItem label="类型">
                     <Select v-model="storage.item.storageType">
-                        <Option :value="1">部门活动</Option>
-                        <Option :value="2">制度规范</Option>
+                        <Option :value="3">制度</Option>
+                        <Option :value="4">资料</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="URL">
@@ -117,7 +117,7 @@
         let _this = this;
 
         _this.storages = [];
-        api.listStorage(1)
+        api.listStorage(3)
           .then(function (res) {
             if (!res.data.success) {
               _this.$Notice.error({
@@ -129,7 +129,7 @@
             _this.storage.loading = false;
           });
 
-        api.listStorage(2)
+        api.listStorage(4)
           .then(function (res) {
             if (!res.data.success) {
               _this.$Notice.error({
